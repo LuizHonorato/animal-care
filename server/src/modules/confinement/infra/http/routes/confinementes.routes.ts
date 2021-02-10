@@ -2,13 +2,17 @@ import { Router } from 'express';
 import { celebrate, Segments, Joi } from 'celebrate';
 
 import ConfinementsController from '../controllers/ConfinementsController';
+import RationProvisionController from '../controllers/RationProvisionController';
 
 const confinementsRouter = Router();
 const confinementsController = new ConfinementsController();
+const rationProvisionController = new RationProvisionController();
 
 confinementsRouter.get('/', confinementsController.index);
 
 confinementsRouter.get('/:id', confinementsController.show);
+
+confinementsRouter.get('/provisions/:id', rationProvisionController.show);
 
 confinementsRouter.post(
   '/',
