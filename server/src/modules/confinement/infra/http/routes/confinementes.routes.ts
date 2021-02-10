@@ -4,15 +4,30 @@ import { celebrate, Segments, Joi } from 'celebrate';
 import ConfinementsController from '../controllers/ConfinementsController';
 import RationProvisionController from '../controllers/RationProvisionController';
 
+import ensureUserAuthenticated from '../middlewares/ensureUserAuthenticated';
+import ensureUserAdmin from '../middlewares/ensureUserAdmin';
+
 const confinementsRouter = Router();
 const confinementsController = new ConfinementsController();
 const rationProvisionController = new RationProvisionController();
 
-confinementsRouter.get('/', confinementsController.index);
+confinementsRouter.get(
+  '/',
+  ensureUserAuthenticated,
+  confinementsController.index,
+);
 
-confinementsRouter.get('/:id', confinementsController.show);
+confinementsRouter.get(
+  '/:id',
+  ensureUserAuthenticated,
+  confinementsController.show,
+);
 
-confinementsRouter.get('/provisions/:id', rationProvisionController.show);
+confinementsRouter.get(
+  '/provisions/:id',
+  ensureUserAuthenticated,
+  rationProvisionController.show,
+);
 
 confinementsRouter.post(
   '/',
@@ -26,6 +41,8 @@ confinementsRouter.post(
       usrCriacao: Joi.string().required(),
     },
   }),
+  ensureUserAuthenticated,
+  ensureUserAdmin,
   confinementsController.create,
 );
 
@@ -42,9 +59,16 @@ confinementsRouter.put(
       usrCriacao: Joi.string().required(),
     },
   }),
+  ensureUserAuthenticated,
+  ensureUserAdmin,
   confinementsController.update,
 );
 
-confinementsRouter.delete('/:id', confinementsController.delete);
+confinementsRouter.delete(
+  '/:id',
+  ensureUserAuthenticated,
+  ensureUserAdmin,
+  confinementsController.delete,
+);
 
 export default confinementsRouter;
