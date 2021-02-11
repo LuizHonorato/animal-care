@@ -16,9 +16,10 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
+import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import MenuIcon from '@material-ui/icons/Menu';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useAuth } from '../../hooks/auth';
 
 const drawerWidth = 240;
@@ -40,6 +41,12 @@ const useStyles = makeStyles((theme: Theme) =>
         width: `calc(100% - ${drawerWidth}px)`,
         marginLeft: drawerWidth,
       },
+    },
+    helloUser: {
+      flexGrow: 1,
+    },
+    logoutButton: {
+      color: '#fff',
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -63,34 +70,6 @@ const Sidebar: React.FC = () => {
     setMobileOpen(!mobileOpen);
   }, [mobileOpen]);
 
-  const drawer = (
-    <div>
-      <div className={classes.toolbar} />
-      <Divider />
-      <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>
-              {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-            </ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
-
   return (
     <>
       <AppBar position="fixed" className={classes.appBar}>
@@ -104,9 +83,12 @@ const Sidebar: React.FC = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
+          <Typography className={classes.helloUser} variant="h6" noWrap>
             {`Olá ${user.username}`}
           </Typography>
+          <IconButton className={classes.logoutButton} aria-label="logout">
+            <ExitToAppIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
       <nav className={classes.drawer} aria-label="mailbox folders">
@@ -123,7 +105,30 @@ const Sidebar: React.FC = () => {
               keepMounted: true,
             }}
           >
-            {drawer}
+            <div>
+              <Typography variant="h6" noWrap>
+                Animal Care
+              </Typography>
+              <div className={classes.toolbar} />
+              <Divider />
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <HomeOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Confinamentos" />
+                </ListItem>
+              </List>
+              <Divider />
+              <List>
+                <ListItem>
+                  <ListItemIcon>
+                    <PersonOutlineOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Perfil do usuário" />
+                </ListItem>
+              </List>
+            </div>
           </Drawer>
         </Hidden>
         <Hidden xsDown implementation="css">
@@ -134,7 +139,27 @@ const Sidebar: React.FC = () => {
             variant="permanent"
             open
           >
-            {drawer}
+            <div>
+              <div className={classes.toolbar} />
+              <Divider />
+              <List>
+                <ListItem button>
+                  <ListItemIcon>
+                    <HomeOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Confinamentos" />
+                </ListItem>
+              </List>
+              <Divider />
+              <List>
+                <ListItem button>
+                  <ListItemIcon>
+                    <PersonOutlineOutlinedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Perfil do usuário" />
+                </ListItem>
+              </List>
+            </div>
           </Drawer>
         </Hidden>
       </nav>

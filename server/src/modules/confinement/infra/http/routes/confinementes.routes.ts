@@ -36,8 +36,8 @@ confinementsRouter.post(
       nome: Joi.string().required(),
       qtdBovinos: Joi.number().required(),
       qtdEquinos: Joi.number().required(),
-      inicioConfinamento: Joi.string().required(),
-      fimConfinamento: Joi.string().required(),
+      inicioConfinamento: Joi.date().required(),
+      fimConfinamento: Joi.date().required(),
       usrCriacao: Joi.string().required(),
     },
   }),
@@ -47,15 +47,15 @@ confinementsRouter.post(
 );
 
 confinementsRouter.put(
-  '/',
+  '/:id',
   celebrate({
     [Segments.BODY]: {
       id: Joi.string().required(),
       nome: Joi.string().required(),
       qtdBovinos: Joi.number().required(),
       qtdEquinos: Joi.number().required(),
-      inicioConfinamento: Joi.string().required(),
-      fimConfinamento: Joi.string().required(),
+      inicioConfinamento: Joi.date().required(),
+      fimConfinamento: Joi.date().required(),
       usrCriacao: Joi.string().required(),
     },
   }),

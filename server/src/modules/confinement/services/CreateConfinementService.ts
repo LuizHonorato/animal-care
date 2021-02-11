@@ -1,5 +1,5 @@
 import AppError from '@shared/errors/AppError';
-import { parseISO, isBefore } from 'date-fns';
+import { isBefore } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
 import Confinement from '../infra/data/entities/Confinement';
 import IConfinementRepository from '../repositories/IConfinementRepository';
@@ -8,8 +8,8 @@ interface IRequest {
   nome: string;
   qtdBovinos: number;
   qtdEquinos: number;
-  inicioConfinamento: string;
-  fimConfinamento: string;
+  inicioConfinamento: Date;
+  fimConfinamento: Date;
   usrCriacao: string;
 }
 
@@ -30,12 +30,9 @@ class CreateConfinementService {
   }: IRequest): Promise<Confinement> {
     const currentDate = new Date(Date.now());
 
-    const parsedInitialDate = parseISO(inicioConfinamento);
-    const parsedFinalDate = parseISO(fimConfinamento);
-
     if (
-      isBefore(parsedInitialDate, currentDate) ||
-      isBefore(parsedFinalDate, currentDate)
+      isBefore(inicioConfinamento, currentDate) ||
+      isBefore(fimConfinamento, currentDate)
     ) {
       throw new AppError('Cannot create a confinement in a past date');
     }
@@ -52,8 +49,8 @@ class CreateConfinementService {
       nome,
       qtdBovinos,
       qtdEquinos,
-      inicioConfinamento: parsedInitialDate,
-      fimConfinamento: parsedFinalDate,
+      inicioConfinamento,
+      fimConfinamento,
       usrCriacao,
     });
 
