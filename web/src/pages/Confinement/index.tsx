@@ -68,13 +68,18 @@ const Confinement: React.FC = () => {
       field: 'provisions',
       headerName: 'Trato',
       width: 130,
-      renderCell: () => (
-        <div style={{ marginTop: 10, cursor: 'pointer' }}>
-          <span>
-            <VisibilityIcon />
-          </span>
-        </div>
-      ),
+      renderCell: (params: ValueFormatterParams) => {
+        const { id } = params.row;
+        return (
+          <div style={{ marginTop: 10, cursor: 'pointer' }}>
+            <span>
+              <Link style={{ color: '#000' }} to={`/trato/${id}`}>
+                <VisibilityIcon />
+              </Link>
+            </span>
+          </div>
+        );
+      },
     },
     { field: 'nome', headerName: 'Nome', width: 130 },
     { field: 'qtdBovinos', headerName: 'Bovinos', width: 130 },

@@ -84,7 +84,7 @@ const Sidebar: React.FC = () => {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.helloUser} variant="h6" noWrap>
-            {`Olá ${user.username}`}
+            {/* {`Olá ${user.username}`} */}
           </Typography>
           <IconButton className={classes.logoutButton} aria-label="logout">
             <ExitToAppIcon />

@@ -105,24 +105,20 @@ const FormConfinement: React.FC = () => {
     if (id) {
       setIdConfinement(id);
 
-      const getConfinement = async () => {
-        await api.get<Confinement>(`/confinements/${id}`).then(response => {
-          setNome(response.data.nome);
-          const parsedInicioConfinamento = new Date(
-            response.data.inicioConfinamento,
-          );
-          setInicioConfinamento(parsedInicioConfinamento);
+      api.get<Confinement>(`/confinements/${id}`).then(response => {
+        setNome(response.data.nome);
+        const parsedInicioConfinamento = new Date(
+          response.data.inicioConfinamento,
+        );
+        setInicioConfinamento(parsedInicioConfinamento);
 
-          const parsedFimConfinamento = new Date(response.data.fimConfinamento);
+        const parsedFimConfinamento = new Date(response.data.fimConfinamento);
 
-          setFimConfinamento(parsedFimConfinamento);
-          setQtdBovinos(response.data.qtdBovinos);
-          setQtdEquinos(response.data.qtdEquinos);
-          setUsrCriacao(response.data.usrCriacao);
-        });
-      };
-
-      getConfinement();
+        setFimConfinamento(parsedFimConfinamento);
+        setQtdBovinos(response.data.qtdBovinos);
+        setQtdEquinos(response.data.qtdEquinos);
+        setUsrCriacao(response.data.usrCriacao);
+      });
     }
   }, [id, idConfinement]);
 
