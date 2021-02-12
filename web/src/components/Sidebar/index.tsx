@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import {
   createStyles,
   makeStyles,
@@ -16,7 +17,6 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import PersonOutlineOutlinedIcon from '@material-ui/icons/PersonOutlineOutlined';
 import HomeOutlinedIcon from '@material-ui/icons/HomeOutlined';
 import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
@@ -54,6 +54,10 @@ const useStyles = makeStyles((theme: Theme) =>
         display: 'none',
       },
     },
+    link: {
+      textDecoration: 'none',
+      color: '#212121',
+    },
   }),
 );
 
@@ -64,7 +68,7 @@ const Sidebar: React.FC = () => {
 
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
 
   const handleDrawerToggle = useCallback(() => {
     setMobileOpen(!mobileOpen);
@@ -84,9 +88,13 @@ const Sidebar: React.FC = () => {
             <MenuIcon />
           </IconButton>
           <Typography className={classes.helloUser} variant="h6" noWrap>
-            {/* {`Olá ${user.username}`} */}
+            {`Olá ${user.username}`}
           </Typography>
-          <IconButton className={classes.logoutButton} aria-label="logout">
+          <IconButton
+            onClick={signOut}
+            className={classes.logoutButton}
+            aria-label="logout"
+          >
             <ExitToAppIcon />
           </IconButton>
         </Toolbar>
@@ -106,28 +114,19 @@ const Sidebar: React.FC = () => {
             }}
           >
             <div>
-              <Typography variant="h6" noWrap>
-                Animal Care
-              </Typography>
               <div className={classes.toolbar} />
               <Divider />
               <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <HomeOutlinedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Confinamentos" />
-                </ListItem>
+                <Link className={classes.link} to="/dashboard">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <HomeOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Confinamentos" />
+                  </ListItem>
+                </Link>
               </List>
               <Divider />
-              <List>
-                <ListItem>
-                  <ListItemIcon>
-                    <PersonOutlineOutlinedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Perfil do usuário" />
-                </ListItem>
-              </List>
             </div>
           </Drawer>
         </Hidden>
@@ -143,22 +142,16 @@ const Sidebar: React.FC = () => {
               <div className={classes.toolbar} />
               <Divider />
               <List>
-                <ListItem button>
-                  <ListItemIcon>
-                    <HomeOutlinedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Confinamentos" />
-                </ListItem>
+                <Link className={classes.link} to="/dashboard">
+                  <ListItem button>
+                    <ListItemIcon>
+                      <HomeOutlinedIcon />
+                    </ListItemIcon>
+                    <ListItemText primary="Confinamentos" />
+                  </ListItem>
+                </Link>
               </List>
               <Divider />
-              <List>
-                <ListItem button>
-                  <ListItemIcon>
-                    <PersonOutlineOutlinedIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Perfil do usuário" />
-                </ListItem>
-              </List>
             </div>
           </Drawer>
         </Hidden>

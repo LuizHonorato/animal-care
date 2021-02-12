@@ -1,4 +1,5 @@
 import AppError from '@shared/errors/AppError';
+import { uuid } from 'uuidv4';
 import { inject, injectable } from 'tsyringe';
 import IConfinementRepository from '../repositories/IConfinementRepository';
 
@@ -7,6 +8,7 @@ interface IRequest {
 }
 
 interface RationProvisionProjection {
+  id: string;
   day: number;
   qtdRationTotalPerDay: number;
   qtdRationToCattlePerDay: number;
@@ -77,6 +79,7 @@ class CalculateRationProvisionByConfinementId {
 
       // Armazenando quantidade total de trato para bovinos e equinos por dia
       rationProvisionProjectionPerDay.push({
+        id: uuid(),
         day,
         qtdRationToCattlePerDay: rationProvisionByCattle,
         qtdRationToHorsePerDay: rationProvisionByHorse,

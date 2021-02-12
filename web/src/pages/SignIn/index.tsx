@@ -78,6 +78,7 @@ const SignIn: React.FC = () => {
           setError(true);
         }
       } catch (err) {
+        console.log(err);
         setOpen(true);
       }
     },

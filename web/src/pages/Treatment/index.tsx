@@ -1,6 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { makeStyles, Theme, createStyles, Grid } from '@material-ui/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useParams, useHistory } from 'react-router-dom';
+import {
+  makeStyles,
+  Theme,
+  createStyles,
+  Grid,
+  Typography,
+  IconButton,
+} from '@material-ui/core';
+import { DataGrid, ColDef, ValueFormatterParams } from '@material-ui/data-grid';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CardDashboard from '../../components/Card';
 import api from '../../services/api';
 
@@ -8,11 +17,22 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     toolbar: theme.mixins.toolbar,
     grid: {
-      margin: '0 -15px !important',
+      margin: '15px 5px !important',
       width: 'unset',
     },
     item: {
       margin: '0 5px 5px 0',
+    },
+    titleArea: {
+      display: 'flex',
+      alignContent: 'center',
+    },
+    buttonBack: {
+      padding: 0,
+      marginRight: 10,
+    },
+    titleText: {
+      fontWeight: 'bold',
     },
   }),
 );
@@ -54,73 +74,135 @@ const Treatment: React.FC = () => {
   const [treatment, setTreatment] = useState<RationProvisionProjection[]>([]);
 
   const { id } = useParams<Params>();
+  const history = useHistory();
 
   useEffect(() => {
-    api
-      .get<Treatment>(`/confinements/provisions/${id}`)
-      .then(response => {
-        setIdConfinement(response.data.id);
-        setCattleTotal(response.data.cattleTotal);
-        setHorseTotal(response.data.horseTotal);
-        setWeightTotal(response.data.weightTotal);
-        setWeightByCattle(response.data.weightByCattle);
-        setWeightByHorse(response.data.weightByHorse);
-        setRationProvisionTotal(response.data.rationProvisionTotal);
-        setRationProvisionByCattle(response.data.rationProvisionByCattle);
-        setRationProvisionByHorse(response.data.rationProvisionByHorse);
-        setTreatment(response.data.rationProvisionProjectionPerDay);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    const getTreatment = async () => {
+      await api
+        .get<Treatment>(`/confinements/provisions/${id}`)
+        .then(response => {
+          setIdConfinement(response.data.id);
+          setCattleTotal(response.data.cattleTotal);
+          setHorseTotal(response.data.horseTotal);
+          setWeightTotal(response.data.weightTotal);
+          setWeightByCattle(response.data.weightByCattle);
+          setWeightByHorse(response.data.weightByHorse);
+          setRationProvisionTotal(response.data.rationProvisionTotal);
+          setRationProvisionByCattle(response.data.rationProvisionByCattle);
+          setRationProvisionByHorse(response.data.rationProvisionByHorse);
+          setTreatment(response.data.rationProvisionProjectionPerDay);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    };
+
+    getTreatment();
   }, [id]);
 
+  const handleBackButton = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
   const classes = useStyles();
+
+  const columns: ColDef[] = [
+    { field: 'day', headerName: 'Dia', width: 130 },
+    {
+      field: 'qtdRationTotalPerDay',
+      headerName: 'Ração total por dia (KG)',
+      width: 210,
+      valueFormatter: (params: ValueFormatterParams) => {
+        const { qtdRationTotalPerDay } = params.row;
+
+        return qtdRationTotalPerDay.toFixed(2);
+      },
+    },
+    {
+      field: 'qtdRationToCattlePerDay',
+      headerName: 'Ração bovina por dia (KG)',
+      width: 240,
+      valueFormatter: (params: ValueFormatterParams) => {
+        const { qtdRationToCattlePerDay } = params.row;
+
+        return qtdRationToCattlePerDay.toFixed(2);
+      },
+    },
+    {
+      field: 'qtdRationToHorsePerDay',
+      headerName: 'Ração equina por dia (KG)',
+      width: 240,
+      valueFormatter: (params: ValueFormatterParams) => {
+        const { qtdRationToHorsePerDay } = params.row;
+
+        return qtdRationToHorsePerDay.toFixed(2);
+      },
+    },
+  ];
 
   return (
     <div>
       <div className={classes.toolbar} />
+      <input type="hidden" value={idConfinement} />
+      <div className={classes.titleArea}>
+        <IconButton
+          onClick={handleBackButton}
+          className={classes.buttonBack}
+          aria-label="logout"
+        >
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography className={classes.titleText} variant="h5" noWrap>
+          Trato
+        </Typography>
+      </div>
       <Grid container className={classes.grid}>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CardDashboard title="Total de bovinos" quantity={cattleTotal} />
         </Grid>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CardDashboard title="Total de equinos" quantity={horseTotal} />
         </Grid>
-        <Grid xs={12} sm={6} md={3}>
-          <CardDashboard title="Peso final projetado" quantity={weightTotal} />
-        </Grid>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CardDashboard
-            title="Peso final de bovinos"
+            title="Peso final projetado (KG)"
+            quantity={weightTotal}
+          />
+        </Grid>
+        <Grid item xs={12} sm={6} md={3}>
+          <CardDashboard
+            title="Peso final de bovinos (KG)"
             quantity={weightByCattle}
           />
         </Grid>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CardDashboard
-            title="Peso final de equinos"
+            title="Peso final de equinos (KG)"
             quantity={weightByHorse}
           />
         </Grid>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CardDashboard
-            title="Trato final projetado"
+            title="Trato final projetado (KG)"
             quantity={rationProvisionTotal}
           />
         </Grid>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CardDashboard
-            title="Trato final de bovinos"
+            title="Trato final de bovinos (KG)"
             quantity={rationProvisionByCattle}
           />
         </Grid>
-        <Grid xs={12} sm={6} md={3}>
+        <Grid item xs={12} sm={6} md={3}>
           <CardDashboard
-            title="Trato final de equinos"
+            title="Trato final de equinos (KG)"
             quantity={rationProvisionByHorse}
           />
         </Grid>
       </Grid>
+      <div style={{ height: 400, width: '100%', marginTop: 15 }}>
+        <DataGrid rows={treatment} columns={columns} pageSize={5} />
+      </div>
     </div>
   );
 };

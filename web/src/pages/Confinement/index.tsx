@@ -10,6 +10,7 @@ import {
   DialogActions,
   DialogTitle,
   DialogContentText,
+  Theme,
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
@@ -26,7 +27,7 @@ interface Confinement {
   usrCriacao: string;
 }
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     titleArea: {
       display: 'flex',
@@ -42,7 +43,7 @@ const useStyles = makeStyles(() =>
     newButton: {
       textDecoration: 'none',
       fontWeight: 'bold',
-      height: 40,
+      height: 38,
       width: 100,
       borderRadius: 4,
       borderWidth: 1,
@@ -52,6 +53,10 @@ const useStyles = makeStyles(() =>
       color: '#fff',
       textAlign: 'center',
       justifyContent: 'center',
+    },
+    loading: {
+      zIndex: theme.zIndex.drawer + 1,
+      color: '#fff',
     },
   }),
 );

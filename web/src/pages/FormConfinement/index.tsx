@@ -1,6 +1,5 @@
 import React, { useCallback, useState, FormEvent, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {
   makeStyles,
   Button,
@@ -9,6 +8,7 @@ import {
   IconButton,
   Snackbar,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import {
@@ -16,6 +16,7 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 import { CloseIcon } from '@material-ui/data-grid';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import api from '../../services/api';
 
 interface Params {
@@ -33,8 +34,9 @@ interface Confinement {
 }
 
 const useStyles = makeStyles(theme => ({
+  toolbar: theme.mixins.toolbar,
   root: {
-    marginTop: theme.spacing(8),
+    marginTop: 20,
     '& .MuiTextField-root': {
       '& #nome': {
         marginTop: theme.spacing(1),
@@ -77,6 +79,17 @@ const useStyles = makeStyles(theme => ({
     '&:hover fieldset': {
       borderColor: '#1E4A81',
     },
+  },
+  titleArea: {
+    display: 'flex',
+    alignContent: 'center',
+  },
+  buttonBack: {
+    padding: 0,
+    marginRight: 10,
+  },
+  titleText: {
+    fontWeight: 'bold',
   },
 }));
 
@@ -138,6 +151,8 @@ const FormConfinement: React.FC = () => {
     async (e: FormEvent) => {
       e.preventDefault();
 
+      setError(false);
+
       try {
         if (
           nome !== '' &&
@@ -175,6 +190,8 @@ const FormConfinement: React.FC = () => {
                 history.push('/dashboard');
               });
           }
+        } else {
+          setError(true);
         }
       } catch {
         setError(true);
@@ -192,9 +209,26 @@ const FormConfinement: React.FC = () => {
     ],
   );
 
+  const handleBackButton = useCallback(() => {
+    history.goBack();
+  }, [history]);
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
+      <div className={classes.toolbar} />
+      <div className={classes.titleArea}>
+        <IconButton
+          onClick={handleBackButton}
+          className={classes.buttonBack}
+          aria-label="logout"
+        >
+          <ArrowBackIcon />
+        </IconButton>
+        <Typography className={classes.titleText} variant="h5" noWrap>
+          {idConfinement ? 'Atualização' : 'Cadastro'}
+        </Typography>
+      </div>
       <form className={classes.root} onSubmit={handleSubmit} noValidate>
         <input type="hidden" value={idConfinement} />
         <div>
@@ -207,9 +241,11 @@ const FormConfinement: React.FC = () => {
             value={nome}
             onChange={e => setNome(e.target.value)}
             id="nome"
+            helperText={
+              error ? 'Informe o nome de identificação desse confinamento' : ''
+            }
             label="Nome do confinamento"
             name="username"
-            autoComplete="username"
           />
         </div>
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -217,6 +253,7 @@ const FormConfinement: React.FC = () => {
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
+              error={error}
               inputVariant="outlined"
               format="dd/MM/yyyy"
               margin="normal"
@@ -224,6 +261,7 @@ const FormConfinement: React.FC = () => {
               label="Início"
               value={inicioConfinamento}
               onChange={handleInicioConfinamentoDateChange}
+              helperText={error ? 'Informe a data início do confinamento' : ''}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
               }}
@@ -232,11 +270,13 @@ const FormConfinement: React.FC = () => {
               disableToolbar
               variant="inline"
               inputVariant="outlined"
+              error={error}
               format="dd/MM/yyyy"
               margin="normal"
               id="fimConfinamento"
               label="Fim"
               value={fimConfinamento}
+              helperText={error ? 'Informe a data fim do confinamento' : ''}
               onChange={handleFimConfinamentoDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
@@ -256,6 +296,7 @@ const FormConfinement: React.FC = () => {
             label="Bovinos"
             type="number"
             id="qtdBovinos"
+            helperText={error ? 'Quantidade mínima de 1' : ''}
             InputLabelProps={{
               shrink: true,
             }}
@@ -271,6 +312,7 @@ const FormConfinement: React.FC = () => {
             label="Equinos"
             type="number"
             id="qtdEquinos"
+            helperText={error ? 'Quantidade mínima de 1' : ''}
             InputLabelProps={{
               shrink: true,
             }}
@@ -287,8 +329,8 @@ const FormConfinement: React.FC = () => {
             error={error}
             id="nome"
             label="Nome do usuário"
-            name="username"
-            autoComplete="username"
+            name="usrCriacao"
+            helperText={error ? 'Nome do usuário não pode estar vazio' : ''}
           />
         </div>
         <Button
