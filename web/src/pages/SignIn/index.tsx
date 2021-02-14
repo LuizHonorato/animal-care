@@ -57,9 +57,8 @@ const CustomTextField = withStyles({
 const SignIn: React.FC = () => {
   const classes = useStyles();
 
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(false);
+  const [username, setUsername] = useState({ value: '', error: '' });
+  const [password, setPassword] = useState({ value: '', error: '' });
   const [open, setOpen] = useState(false);
 
   const history = useHistory();
@@ -68,17 +67,29 @@ const SignIn: React.FC = () => {
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
-      setError(false);
       try {
-        if (username !== '' && password !== '') {
-          await signIn({ username, password });
-
-          history.push('/dashboard');
-        } else {
-          setError(true);
+        if (username.value === '') {
+          setUsername({
+            ...username,
+            value: '',
+            error: 'Nome de usuário não pode estar vazio',
+          });
+          return;
         }
+
+        if (password.value === '') {
+          setPassword({
+            ...username,
+            value: '',
+            error: 'Senha não pode estar vazia',
+          });
+          return;
+        }
+
+        await signIn({ username: username.value, password: password.value });
+
+        history.push('/dashboard');
       } catch (err) {
-        console.log(err);
         setOpen(true);
       }
     },
@@ -105,28 +116,32 @@ const SignIn: React.FC = () => {
             margin="normal"
             required
             fullWidth
-            error={error}
+            error={!!username.error}
             id="username"
             label="Nome de usuário"
             name="username"
             autoComplete="username"
             autoFocus
-            onChange={e => setUsername(e.target.value)}
-            helperText={error ? 'Nome de usuário não pode estar vazio' : ''}
+            onChange={e =>
+              setUsername({ ...username, value: e.target.value, error: '' })
+            }
+            helperText={username.error ? username.error : ''}
           />
           <CustomTextField
             variant="outlined"
             margin="normal"
             required
             fullWidth
-            error={error}
+            error={!!password.error}
             name="password"
             label="Senha"
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange={e => setPassword(e.target.value)}
-            helperText={error ? 'Senha não pode estar vazia' : ''}
+            onChange={e =>
+              setPassword({ ...password, value: e.target.value, error: '' })
+            }
+            helperText={password.error ? password.error : ''}
           />
           <Button
             type="submit"
@@ -157,7 +172,7 @@ const SignIn: React.FC = () => {
               </IconButton>
             </>
           }
-          message="Ocorreu um erro ao fazer login, cheque as credenciais."
+          message="Ocorreu um erro ao fazer login, cheque suas credenciais."
         />
       </div>
     </Container>

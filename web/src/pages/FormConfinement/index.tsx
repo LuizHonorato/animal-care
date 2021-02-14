@@ -98,7 +98,9 @@ const FormConfinement: React.FC = () => {
 
   const history = useHistory();
 
-  const [idConfinement, setIdConfinement] = useState('');
+  const { id } = useParams<Params>();
+
+  const [idConfinement, setIdConfinement] = useState(id);
   const [nome, setNome] = useState('');
   const [inicioConfinamento, setInicioConfinamento] = useState<Date | null>(
     new Date(),
@@ -112,13 +114,9 @@ const FormConfinement: React.FC = () => {
   const [error, setError] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const { id } = useParams<Params>();
-
   useEffect(() => {
-    if (id) {
-      setIdConfinement(id);
-
-      api.get<Confinement>(`/confinements/${id}`).then(response => {
+    if (idConfinement) {
+      api.get<Confinement>(`/confinements/${idConfinement}`).then(response => {
         setNome(response.data.nome);
         const parsedInicioConfinamento = new Date(
           response.data.inicioConfinamento,
@@ -133,7 +131,7 @@ const FormConfinement: React.FC = () => {
         setUsrCriacao(response.data.usrCriacao);
       });
     }
-  }, [id, idConfinement]);
+  }, [idConfinement]);
 
   const handleClose = useCallback(() => {
     setOpen(false);
@@ -193,8 +191,8 @@ const FormConfinement: React.FC = () => {
         } else {
           setError(true);
         }
-      } catch {
-        setError(true);
+      } catch (err) {
+        alert(err.message);
       }
     },
     [
@@ -253,6 +251,7 @@ const FormConfinement: React.FC = () => {
             <KeyboardDatePicker
               disableToolbar
               variant="inline"
+              disablePast
               error={error}
               inputVariant="outlined"
               format="dd/MM/yyyy"
@@ -270,6 +269,7 @@ const FormConfinement: React.FC = () => {
               disableToolbar
               variant="inline"
               inputVariant="outlined"
+              disablePast
               error={error}
               format="dd/MM/yyyy"
               margin="normal"

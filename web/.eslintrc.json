@@ -27,6 +27,7 @@
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": "off",
+    "no-alert": "off",
     "react-hooks/rules-of-hooks": "error",
     "react/jsx-props-no-spreading": "off",
     "space-before-function-paren": "off",

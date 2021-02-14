@@ -6,7 +6,7 @@ import Confinement from '../entities/Confinement';
 class ConfinementsRepository implements IConfinementRepository {
   private confinements: Confinement[] = [
     {
-      id: uuid(),
+      id: 'c8b7a86f-b031-4e39-bf5a-7a8e73addc38',
       nome: 'Confinamento 1',
       qtdBovinos: 1,
       qtdEquinos: 1,

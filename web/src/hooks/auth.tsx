@@ -4,7 +4,7 @@ import api from '../services/api';
 interface User {
   id: string;
   username: string;
-  admin: boolean;
+  admin: boolean | undefined;
 }
 
 interface AuthState {

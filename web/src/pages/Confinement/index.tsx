@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { DataGrid, ColDef, ValueFormatterParams } from '@material-ui/data-grid';
 import {
@@ -130,6 +130,7 @@ const Confinement: React.FC = () => {
       field: 'actions',
       headerName: 'Ações',
       width: 130,
+      hide: !user.admin,
       renderCell: (params: ValueFormatterParams) => {
         const { id } = params.row;
         return (
@@ -149,9 +150,13 @@ const Confinement: React.FC = () => {
   ];
 
   useEffect(() => {
-    api.get('/confinements').then(response => {
-      setConfinements(response.data);
-    });
+    const getConfinements = async () => {
+      await api.get('/confinements').then(response => {
+        setConfinements(response.data);
+      });
+    };
+
+    getConfinements();
   }, [confinements]);
 
   const handleRemoveConfinement = useCallback(async () => {
@@ -188,11 +193,15 @@ const Confinement: React.FC = () => {
         <Typography className={classes.titleText} variant="h5" noWrap>
           Confinamentos
         </Typography>
-        <Link className={classes.linkToForm} to="/form">
-          <Typography className={classes.newButton} variant="h6" noWrap>
-            Novo
-          </Typography>
-        </Link>
+        {user.admin ? (
+          <Link className={classes.linkToForm} to="/form">
+            <Typography className={classes.newButton} variant="h6" noWrap>
+              Novo
+            </Typography>
+          </Link>
+        ) : (
+          ''
+        )}
       </div>
       <div style={{ height: 400, width: '100%' }}>
         <DataGrid rows={confinements} columns={columns} pageSize={5} />
