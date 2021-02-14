@@ -1,4 +1,4 @@
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 import ICreateConfinementDTO from '@modules/confinement/dtos/ICreateConfinementDTO';
 import IConfinementRepository from '@modules/confinement/repositories/IConfinementRepository';
 import Confinement from '../entities/Confinement';

@@ -1,5 +1,5 @@
 import AppError from '@shared/errors/AppError';
-import { uuid } from 'uuidv4';
+import { v4 as uuid } from 'uuid';
 import { inject, injectable } from 'tsyringe';
 import IConfinementRepository from '../repositories/IConfinementRepository';
 
