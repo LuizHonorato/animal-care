@@ -111,7 +111,14 @@ const FormConfinement: React.FC = () => {
   const [qtdBovinos, setQtdBovinos] = useState(0);
   const [qtdEquinos, setQtdEquinos] = useState(0);
   const [usrCriacao, setUsrCriacao] = useState('');
-  const [error, setError] = useState(false);
+  const [errors, setErrors] = useState({
+    nome: false,
+    inicioConfinamento: false,
+    fimConfinamento: false,
+    qtdBovinos: false,
+    qtdEquinos: false,
+    usrCriacao: false,
+  });
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -138,61 +145,99 @@ const FormConfinement: React.FC = () => {
   }, []);
 
   const handleInicioConfinamentoDateChange = (date: Date | null) => {
+    setErrors({ ...errors, inicioConfinamento: false });
     setInicioConfinamento(date);
   };
 
   const handleFimConfinamentoDateChange = (date: Date | null) => {
+    setErrors({ ...errors, fimConfinamento: false });
     setFimConfinamento(date);
   };
+
+  const handleChangeText = useCallback(
+    e => {
+      if (e.target.name === 'username') {
+        setErrors({ ...errors, nome: false });
+        setNome(e.target.value);
+      } else if (e.target.name === 'qtdBovinos') {
+        setErrors({ ...errors, qtdBovinos: false });
+        setQtdBovinos(Number(e.target.value));
+      } else if (e.target.name === 'qtdEquinos') {
+        setErrors({ ...errors, qtdEquinos: false });
+        setQtdEquinos(Number(e.target.value));
+      } else if (e.target.name === 'usrCriacao') {
+        setErrors({ ...errors, usrCriacao: false });
+        setUsrCriacao(e.target.value);
+      }
+    },
+    [errors],
+  );
 
   const handleSubmit = useCallback(
     async (e: FormEvent) => {
       e.preventDefault();
 
-      setError(false);
+      if (nome === '') {
+        setErrors({ ...errors, nome: true });
+        return;
+      }
+
+      if (inicioConfinamento === null) {
+        setErrors({ ...errors, inicioConfinamento: true });
+        return;
+      }
+
+      if (fimConfinamento === null) {
+        setErrors({ ...errors, fimConfinamento: true });
+        return;
+      }
+
+      if (qtdBovinos <= 0) {
+        setErrors({ ...errors, qtdBovinos: true });
+        return;
+      }
+
+      if (qtdEquinos <= 0) {
+        setErrors({ ...errors, qtdEquinos: true });
+        return;
+      }
+
+      if (usrCriacao === '') {
+        setErrors({ ...errors, usrCriacao: true });
+        return;
+      }
 
       try {
-        if (
-          nome !== '' &&
-          inicioConfinamento !== null &&
-          fimConfinamento !== null &&
-          qtdBovinos > 0 &&
-          qtdEquinos > 0 &&
-          usrCriacao !== ''
-        ) {
-          if (!idConfinement) {
-            await api
-              .post('/confinements', {
-                nome,
-                inicioConfinamento,
-                fimConfinamento,
-                qtdBovinos,
-                qtdEquinos,
-                usrCriacao,
-              })
-              .then(() => {
-                history.push('/dashboard');
-              });
-          } else {
-            await api
-              .put(`/confinements/${idConfinement}`, {
-                id: idConfinement,
-                nome,
-                inicioConfinamento,
-                fimConfinamento,
-                qtdBovinos,
-                qtdEquinos,
-                usrCriacao,
-              })
-              .then(() => {
-                history.push('/dashboard');
-              });
-          }
+        if (!idConfinement) {
+          await api
+            .post('/confinements', {
+              nome,
+              inicioConfinamento,
+              fimConfinamento,
+              qtdBovinos,
+              qtdEquinos,
+              usrCriacao,
+            })
+            .then(() => {
+              history.push('/dashboard');
+            });
         } else {
-          setError(true);
+          await api
+            .put(`/confinements/${idConfinement}`, {
+              id: idConfinement,
+              nome,
+              inicioConfinamento,
+              fimConfinamento,
+              qtdBovinos,
+              qtdEquinos,
+              usrCriacao,
+            })
+            .then(() => {
+              history.push('/dashboard');
+            });
         }
       } catch (err) {
-        alert(err.message);
+        setOpen(true);
       }
     },
     [
@@ -204,6 +249,7 @@ const FormConfinement: React.FC = () => {
       qtdEquinos,
       usrCriacao,
       history,
+      errors,
     ],
   );
 
@@ -235,12 +281,14 @@ const FormConfinement: React.FC = () => {
             margin="normal"
             required
             fullWidth
-            error={error}
+            error={errors.nome}
             value={nome}
-            onChange={e => setNome(e.target.value)}
+            onChange={e => handleChangeText(e)}
             id="nome"
             helperText={
-              error ? 'Informe o nome de identificação desse confinamento' : ''
+              errors.nome
+                ? 'Informe o nome de identificação desse confinamento'
+                : ''
             }
             label="Nome do confinamento"
             name="username"
@@ -252,7 +300,7 @@ const FormConfinement: React.FC = () => {
               disableToolbar
               variant="inline"
               disablePast
-              error={error}
+              error={errors.inicioConfinamento}
               inputVariant="outlined"
               format="dd/MM/yyyy"
               margin="normal"
@@ -260,7 +308,11 @@ const FormConfinement: React.FC = () => {
               label="Início"
               value={inicioConfinamento}
               onChange={handleInicioConfinamentoDateChange}
-              helperText={error ? 'Informe a data início do confinamento' : ''}
+              helperText={
+                errors.inicioConfinamento
+                  ? 'Informe a data início do confinamento'
+                  : ''
+              }
               KeyboardButtonProps={{
                 'aria-label': 'change date',
               }}
@@ -270,13 +322,17 @@ const FormConfinement: React.FC = () => {
               variant="inline"
               inputVariant="outlined"
               disablePast
-              error={error}
+              error={errors.fimConfinamento}
               format="dd/MM/yyyy"
               margin="normal"
               id="fimConfinamento"
               label="Fim"
               value={fimConfinamento}
-              helperText={error ? 'Informe a data fim do confinamento' : ''}
+              helperText={
+                errors.fimConfinamento
+                  ? 'Informe a data fim do confinamento'
+                  : ''
+              }
               onChange={handleFimConfinamentoDateChange}
               KeyboardButtonProps={{
                 'aria-label': 'change date',
@@ -289,14 +345,14 @@ const FormConfinement: React.FC = () => {
             variant="outlined"
             margin="normal"
             required
-            error={error}
+            error={errors.qtdBovinos}
             value={qtdBovinos}
-            onChange={e => setQtdBovinos(Number(e.target.value))}
+            onChange={e => handleChangeText(e)}
             name="qtdBovinos"
             label="Bovinos"
             type="number"
             id="qtdBovinos"
-            helperText={error ? 'Quantidade mínima de 1' : ''}
+            helperText={errors.qtdBovinos ? 'Quantidade mínima de 1' : ''}
             InputLabelProps={{
               shrink: true,
             }}
@@ -306,13 +362,13 @@ const FormConfinement: React.FC = () => {
             margin="normal"
             required
             value={qtdEquinos}
-            onChange={e => setQtdEquinos(Number(e.target.value))}
-            error={error}
+            onChange={e => handleChangeText(e)}
+            error={errors.qtdEquinos}
             name="qtdEquinos"
             label="Equinos"
             type="number"
             id="qtdEquinos"
-            helperText={error ? 'Quantidade mínima de 1' : ''}
+            helperText={errors.qtdEquinos ? 'Quantidade mínima de 1' : ''}
             InputLabelProps={{
               shrink: true,
             }}
@@ -325,12 +381,14 @@ const FormConfinement: React.FC = () => {
             required
             fullWidth
             value={usrCriacao}
-            onChange={e => setUsrCriacao(e.target.value)}
-            error={error}
+            onChange={e => handleChangeText(e)}
+            error={errors.usrCriacao}
             id="nome"
             label="Nome do usuário"
             name="usrCriacao"
-            helperText={error ? 'Nome do usuário não pode estar vazio' : ''}
+            helperText={
+              errors.usrCriacao ? 'Nome do usuário não pode estar vazio' : ''
+            }
           />
         </div>
         <Button
@@ -362,7 +420,7 @@ const FormConfinement: React.FC = () => {
             </IconButton>
           </>
         }
-        message="Ocorreu um erro ao fazer login, cheque as credenciais."
+        message="Ocorreu um erro ao salvar o confinamento. Cheque seus dados e tente novamente."
       />
     </Container>
   );
