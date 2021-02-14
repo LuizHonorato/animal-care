@@ -103,10 +103,10 @@ const FormConfinement: React.FC = () => {
   const [idConfinement, setIdConfinement] = useState(id);
   const [nome, setNome] = useState('');
   const [inicioConfinamento, setInicioConfinamento] = useState<Date | null>(
-    new Date(),
+    new Date(2021, 3, 1),
   );
   const [fimConfinamento, setFimConfinamento] = useState<Date | null>(
-    new Date(),
+    new Date(2021, 3, 31),
   );
   const [qtdBovinos, setQtdBovinos] = useState(0);
   const [qtdEquinos, setQtdEquinos] = useState(0);
@@ -160,7 +160,7 @@ const FormConfinement: React.FC = () => {
           qtdEquinos > 0 &&
           usrCriacao !== ''
         ) {
-          if (idConfinement === '') {
+          if (!idConfinement) {
             await api
               .post('/confinements', {
                 nome,

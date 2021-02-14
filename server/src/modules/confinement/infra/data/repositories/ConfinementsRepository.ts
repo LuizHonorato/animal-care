@@ -10,7 +10,7 @@ class ConfinementsRepository implements IConfinementRepository {
       nome: 'Confinamento 1',
       qtdBovinos: 1,
       qtdEquinos: 1,
-      inicioConfinamento: new Date(),
+      inicioConfinamento: new Date(2021, 3, 1),
       fimConfinamento: new Date(2021, 5, 31),
       usrCriacao: 'Luiz',
     },
