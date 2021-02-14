@@ -120,8 +120,6 @@ const SignIn: React.FC = () => {
             id="username"
             label="Nome de usuário"
             name="username"
-            autoComplete="username"
-            autoFocus
             onChange={e =>
               setUsername({ ...username, value: e.target.value, error: '' })
             }
@@ -137,7 +135,6 @@ const SignIn: React.FC = () => {
             label="Senha"
             type="password"
             id="password"
-            autoComplete="current-password"
             onChange={e =>
               setPassword({ ...password, value: e.target.value, error: '' })
             }
