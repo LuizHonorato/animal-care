@@ -37,7 +37,7 @@ Mobile:
  
  - Clone este repositório e entre na pasta /web;
  - Rode o comando yarn ou npm install para instalar as dependências;
- - Rode o comando yarn start ou npm run start e o a-- estará acessível no endereço http://localhost:3333.
+ - Rode o comando yarn start ou npm run start e o a-- estará acessível no endereço http://localhost:3000.
  
  Para executar o app mobile, siga os seguintes passos:
  
