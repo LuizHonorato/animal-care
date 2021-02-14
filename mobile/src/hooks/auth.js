@@ -52,18 +52,6 @@ import React, {
       setData({ token, user });
     }, []);
   
-    const updateUser = useCallback(
-      async (user) => {
-        await AsyncStorage.setItem('@AnimalCare:user', JSON.stringify(user));
-  
-        setData({
-          token: data.token,
-          user,
-        });
-      },
-      [setData, data.token],
-    );
-  
     const signOut = useCallback(async () => {
       await AsyncStorage.multiRemove(['@AnimalCare:user', '@AnimalCare:token']);
   
@@ -72,7 +60,7 @@ import React, {
   
     return (
       <AuthContext.Provider
-        value={{ user: data.user, loading, signIn, updateUser, signOut }}
+        value={{ user: data.user, loading, signIn, signOut }}
       >
         {props.children}
       </AuthContext.Provider>
