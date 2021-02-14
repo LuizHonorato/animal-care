@@ -16,6 +16,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import api from '../../services/api';
+import { useAuth } from '../../hooks/auth';
 
 interface Confinement {
   id: string;
@@ -63,6 +64,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Confinement: React.FC = () => {
   const classes = useStyles();
+  const { user } = useAuth();
 
   const [confinements, setConfinements] = useState<Confinement[]>([]);
   const [idToExclude, setIdToExclude] = useState('');

@@ -4,7 +4,17 @@ import IConfinementRepository from '@modules/confinement/repositories/IConfineme
 import Confinement from '../entities/Confinement';
 
 class ConfinementsRepository implements IConfinementRepository {
-  private confinements: Confinement[] = [];
+  private confinements: Confinement[] = [
+    {
+      id: uuid(),
+      nome: 'Confinamento 1',
+      qtdBovinos: 1,
+      qtdEquinos: 1,
+      inicioConfinamento: new Date(),
+      fimConfinamento: new Date(2021, 5, 31),
+      usrCriacao: 'Luiz',
+    },
+  ];
 
   public async findAll(): Promise<Confinement[]> {
     return this.confinements;
