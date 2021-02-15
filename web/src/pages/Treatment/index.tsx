@@ -1,41 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useParams, useHistory } from 'react-router-dom';
-import {
-  makeStyles,
-  Theme,
-  createStyles,
-  Grid,
-  Typography,
-  IconButton,
-} from '@material-ui/core';
+import { Grid, Typography, IconButton } from '@material-ui/core';
 import { DataGrid, ColDef, ValueFormatterParams } from '@material-ui/data-grid';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import CardDashboard from '../../components/Card';
 import api from '../../services/api';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    toolbar: theme.mixins.toolbar,
-    grid: {
-      margin: '15px 5px !important',
-      width: 'unset',
-    },
-    item: {
-      margin: '0 5px 5px 0',
-    },
-    titleArea: {
-      display: 'flex',
-      alignContent: 'center',
-    },
-    buttonBack: {
-      padding: 0,
-      marginRight: 10,
-    },
-    titleText: {
-      fontWeight: 'bold',
-    },
-  }),
-);
+import useStyles from './styles';
 
 interface Params {
   id?: string;

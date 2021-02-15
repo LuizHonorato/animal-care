@@ -3,20 +3,18 @@ import { Link } from 'react-router-dom';
 import { DataGrid, ColDef, ValueFormatterParams } from '@material-ui/data-grid';
 import {
   Typography,
-  makeStyles,
-  createStyles,
   Button,
   Dialog,
   DialogActions,
   DialogTitle,
   DialogContentText,
-  Theme,
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import DeleteOutlineIcon from '@material-ui/icons/DeleteOutline';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import api from '../../services/api';
 import { useAuth } from '../../hooks/auth';
+import useStyles from './styles';
 
 interface Confinement {
   id: string;
@@ -27,40 +25,6 @@ interface Confinement {
   fimConfinamento: Date;
   usrCriacao: string;
 }
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    titleArea: {
-      display: 'flex',
-      margin: '16px 0',
-    },
-    titleText: {
-      flexGrow: 1,
-      fontWeight: 'bold',
-    },
-    linkToForm: {
-      textDecoration: 'none',
-    },
-    newButton: {
-      textDecoration: 'none',
-      fontWeight: 'bold',
-      height: 38,
-      width: 100,
-      borderRadius: 4,
-      borderWidth: 1,
-      borderStyle: 'solid',
-      borderColor: '#1E4A81',
-      background: '#1E4A81',
-      color: '#fff',
-      textAlign: 'center',
-      justifyContent: 'center',
-    },
-    loading: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
-    },
-  }),
-);
 
 const Confinement: React.FC = () => {
   const classes = useStyles();

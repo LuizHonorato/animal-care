@@ -1,12 +1,6 @@
 import React from 'react';
-import { makeStyles, createStyles, Theme } from '@material-ui/core';
 import Confinement from '../Confinement';
-
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    toolbar: theme.mixins.toolbar,
-  }),
-);
+import useStyles from './styles';
 
 const Dashboard: React.FC = () => {
   const classes = useStyles();
