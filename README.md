@@ -19,6 +19,7 @@ Backend:
 Frontend:
 
 - React
+- Typescript
 - Material-UI
 
 Mobile:
