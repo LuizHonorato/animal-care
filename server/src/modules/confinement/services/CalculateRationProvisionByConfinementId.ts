@@ -68,11 +68,11 @@ class CalculateRationProvisionByConfinementId {
 
     for (differenceInDays; differenceInDays > 0; differenceInDays--) {
       // Calculando quantidade total de trato e peso total projetado para bovinos
-      rationProvisionByCattle = cattleInitialWeight * 0.005;
+      rationProvisionByCattle = cattleInitialWeight * 0.0005;
       cattleInitialWeight += cattleWeightGainPerDay;
 
       // Calculando quantidade total de trato e peso total projetado para equinos
-      rationProvisionByHorse = horseInitialWeight * 0.005;
+      rationProvisionByHorse = horseInitialWeight * 0.0005;
       horseInitialWeight += horseWeightGainPerDay;
 
       const day = totalDays - differenceInDays + 1;
